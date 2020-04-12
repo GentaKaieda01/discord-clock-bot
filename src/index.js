@@ -1,8 +1,9 @@
+require('dotenv').config();
 //Allows us to use Discord commands by grabbing it from the node_modules
 const Discord = require('discord.js');
 
 //Gets all the information for our token and prefix from the config.json file 
-const { prefix, token } = require('./src/config.json');
+//const { prefix, token } = require('./config.json');
 
 //Allows user to use discord commands with the client
 const client = new Discord.Client();
@@ -30,7 +31,7 @@ client.on('message', message => {
         //Create a embeded message object 
         let embed = new Discord.MessageEmbed();
         //Gets the message and omitts case seneitivity / checks if the message says !clock-in or not
-        if (message.content.toLocaleLowerCase().startsWith(`${prefix}clock-in`)) {
+        if (message.content.toLocaleLowerCase().startsWith(`${process.env.PREFIX}clock-in`)) {
             //Gets the message the user sent and get the time they are clocked in for
             let clock_message = message.content;
             //If the clock in message has more than 16 characters dont accept the string because of formatting
@@ -137,7 +138,7 @@ client.on('message', message => {
             console.log(usernames);
         }
         //If the message is !clock-out then pop the user out of the array.
-        if (message.content.toLocaleLowerCase() === `${prefix}clock-out`) {
+        if (message.content.toLocaleLowerCase() === `${process.env.PREFIX}clock-out`) {
             //Create a bool variable that checks if the user is checked-in 
             let exist = false;
             //Check if they exist in the map.
@@ -174,7 +175,7 @@ client.on('message', message => {
             console.log(usernames);
         }
         //If the message is !help-ta show a list of the commands.
-        if (message.content.toLowerCase() === `${prefix}help-ta`) {
+        if (message.content.toLowerCase() === `${process.env.PREFIX}help-ta`) {
             message.delete({ timeout: 1000 });
             var description_in = "To clock in, type the command: !clock-in followed by a space and then a *time* of how long you are clocked in for. \n"
             description_in += " \n The *time* format should be whatever many hours youre working seperated by a ':' and then however many minutes. \n\n Example 1: If you're working for an hour, you would type the command: !clock-in 01:00";
@@ -200,7 +201,7 @@ client.on('message', message => {
         message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 10000 }) });
     }
     //If the message is !on-duty check to see who is on duty.
-    if (message.content.toLocaleLowerCase() === `${prefix}on-duty`) {
+    if (message.content.toLocaleLowerCase() === `${process.env.PREFIX}on-duty`) {
         let embed = new Discord.MessageEmbed();
         embed.setColor("#03e8fc");
         //Delete the on-duty message
@@ -230,7 +231,7 @@ client.on('message', message => {
         }
     }
 
-    if (message.content.toLowerCase() === `${prefix}help-student`) {
+    if (message.content.toLowerCase() === `${process.env.PREFIX}help-student`) {
         message.delete({ timeout: 1000 });
         var descrption = "To check who is online, available, and on duty type the command: !on-duty \n";
         let embed = new Discord.MessageEmbed();
@@ -243,7 +244,7 @@ client.on('message', message => {
     }
 });
 //Allows the client to login to the specified server
-client.login(token);
+client.login(process.env.BOT_TOKEN);
 
 //Gets the exact time in string format found code on stack overflow @ https://stackoverflow.com/questions/35324512/get-exact-time-in-javascript 
 var getTimeString = function (input, separator) {
