@@ -1,0 +1,24 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node ./index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.1.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GentaKaieda01/discord-clock-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GentaKaieda01/discord-clock-bot/issues"
+  },
+  "homepage": "https://github.com/GentaKaieda01/discord-clock-bot#readme",
+  "description": ""
+}
