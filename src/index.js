@@ -16,6 +16,7 @@ client.once('ready', () => {
 //Create a map to store the users time and username
 let usernames = new Map();
 
+
 //Used to get the message the user sent
 client.on('message', message => {
     //Check if the user has permission to do the command 
