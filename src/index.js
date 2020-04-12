@@ -2,7 +2,7 @@
 const Discord = require('discord.js');
 
 //Gets all the information for our token and prefix from the config.json file 
-const { prefix, token } = require('./config.json');
+const { prefix, token } = require('./src/config.json');
 
 //Allows user to use discord commands with the client
 const client = new Discord.Client();
