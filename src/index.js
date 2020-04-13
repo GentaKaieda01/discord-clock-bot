@@ -193,6 +193,7 @@ client.on('message', message => {
             message.channel.send(embed).then(d_embed => { d_embed.delete({ timeout: 60000 }) });
         }
     }
+    /*
     else {
         let embed = new Discord.MessageEmbed();
         message.delete({ timeout: 5000 });
@@ -201,6 +202,7 @@ client.on('message', message => {
         embed.setColor("#ffaa00");
         message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 10000 }) });
     }
+    */
     //If the message is !on-duty check to see who is on duty.
     if (message.content.toLocaleLowerCase() === `${process.env.PREFIX}on-duty`) {
         let embed = new Discord.MessageEmbed();
