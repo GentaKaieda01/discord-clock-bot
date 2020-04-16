@@ -19,6 +19,49 @@ let usernames = new Map();
 
 //Used to get the message the user sent
 client.on('message', message => {
+        //If the message is !on-duty check to see who is on duty.
+        if (message.content.toLocaleLowerCase() === `${process.env.PREFIX}on-duty`) {
+            let embed = new Discord.MessageEmbed();
+            embed.setColor("#03e8fc");
+            //Delete the on-duty message
+            message.delete({ timeout: 1000 });
+            //If there is no one on duty message the channel that no one is online
+            if (usernames.size == 0) {
+                embed.setTitle("No one is on duty right now :/");
+                message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
+            }
+            //If one persion is on-duty message the channel that the one person is online 
+            else if (usernames.size == 1) {
+                usernames.forEach(function (key, value) {
+                    embed.setDescription("<@" + value.id + ">");
+                });
+                embed.setTitle("Is online and on duty");
+                message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
+            }
+            //If there is mulitple TA's online then get all the TA's and display them
+            else {
+                let ta_names = "";
+                usernames.forEach(function (key, value) {
+                    ta_names += "<@" + value.id + ">";
+                });
+                embed.setDescription(ta_names);
+                embed.setTitle("Are Clocked in and on duty! ");
+                message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
+            }
+        }
+    
+        if (message.content.toLowerCase() === `${process.env.PREFIX}help-student`) {
+            message.delete({ timeout: 1000 });
+            var descrption = "To check who is online, available, and on duty type the command: !on-duty \n";
+            let embed = new Discord.MessageEmbed();
+            embed.setTitle("Clock-Bot Mannual for Students");
+            embed.addField("On-Duty Command:", descrption);
+            embed.addField("TA-Schedule", "https://www.utrgv.edu/csci/academics/ta-center/index.htm");
+            embed.addField("Notes:", "You can also know who is on-duty by checking the bar on the right (they should have the role on-duty). \n The blue message indicates the on-duty messages! \n\n The benefit of using the on-duty command is that it pings all the TA's that are on-duty so they get a notification! \n\n You must start each command with a '!'. The commands are NOT case sensitve. You can type in any command with capitals and it will still accept the command. \n\n If you have any suggestions on making the bot better contact GentaKaieda#5381 on discord :-)");
+            embed.setColor("#94efff");
+            message.channel.send(embed).then(d_embed => { d_embed.delete({ timeout: 60000 }) });
+        }
+        
     //Check if the user has permission to do the command 
     if (message.member.hasPermission(['KICK_MEMBERS', 'BAN_MEMBERS'])) {
         //If the message is sent by the bot dont do anything just reutrn
@@ -193,7 +236,6 @@ client.on('message', message => {
             message.channel.send(embed).then(d_embed => { d_embed.delete({ timeout: 60000 }) });
         }
     }
-    /*
     else {
         let embed = new Discord.MessageEmbed();
         message.delete({ timeout: 5000 });
@@ -201,49 +243,6 @@ client.on('message', message => {
         embed.setDescription("Hey! You aren't a TA. \n If you need more assitance type the command: !help-student");
         embed.setColor("#ffaa00");
         message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 10000 }) });
-    }
-    */
-    //If the message is !on-duty check to see who is on duty.
-    if (message.content.toLocaleLowerCase() === `${process.env.PREFIX}on-duty`) {
-        let embed = new Discord.MessageEmbed();
-        embed.setColor("#03e8fc");
-        //Delete the on-duty message
-        message.delete({ timeout: 1000 });
-        //If there is no one on duty message the channel that no one is online
-        if (usernames.size == 0) {
-            embed.setTitle("No one is on duty right now :/");
-            message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
-        }
-        //If one persion is on-duty message the channel that the one person is online 
-        else if (usernames.size == 1) {
-            usernames.forEach(function (key, value) {
-                embed.setDescription("<@" + value.id + ">");
-            });
-            embed.setTitle("Is online and on duty");
-            message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
-        }
-        //If there is mulitple TA's online then get all the TA's and display them
-        else {
-            let ta_names = "";
-            usernames.forEach(function (key, value) {
-                ta_names += "<@" + value.id + ">";
-            });
-            embed.setDescription(ta_names);
-            embed.setTitle("Are Clocked in and on duty! ");
-            message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
-        }
-    }
-
-    if (message.content.toLowerCase() === `${process.env.PREFIX}help-student`) {
-        message.delete({ timeout: 1000 });
-        var descrption = "To check who is online, available, and on duty type the command: !on-duty \n";
-        let embed = new Discord.MessageEmbed();
-        embed.setTitle("Clock-Bot Mannual for Students");
-        embed.addField("On-Duty Command:", descrption);
-        embed.addField("TA-Schedule", "https://www.utrgv.edu/csci/academics/ta-center/index.htm");
-        embed.addField("Notes:", "You can also know who is on-duty by checking the bar on the right (they should have the role on-duty). \n The blue message indicates the on-duty messages! \n\n The benefit of using the on-duty command is that it pings all the TA's that are on-duty so they get a notification! \n\n You must start each command with a '!'. The commands are NOT case sensitve. You can type in any command with capitals and it will still accept the command. \n\n If you have any suggestions on making the bot better contact GentaKaieda#5381 on discord :-)");
-        embed.setColor("#94efff");
-        message.channel.send(embed).then(d_embed => { d_embed.delete({ timeout: 60000 }) });
     }
 });
 //Allows the client to login to the specified server
