@@ -19,49 +19,51 @@ let usernames = new Map();
 
 //Used to get the message the user sent
 client.on('message', message => {
-        //If the message is !on-duty check to see who is on duty.
-        if (message.content.toLocaleLowerCase() === `${process.env.PREFIX}on-duty`) {
-            let embed = new Discord.MessageEmbed();
-            embed.setColor("#03e8fc");
-            //Delete the on-duty message
-            message.delete({ timeout: 1000 });
-            //If there is no one on duty message the channel that no one is online
-            if (usernames.size == 0) {
-                embed.setTitle("No one is on duty right now :/");
-                message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
-            }
-            //If one persion is on-duty message the channel that the one person is online 
-            else if (usernames.size == 1) {
-                usernames.forEach(function (key, value) {
-                    embed.setDescription("<@" + value.id + ">");
-                });
-                embed.setTitle("Is online and on duty");
-                message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
-            }
-            //If there is mulitple TA's online then get all the TA's and display them
-            else {
-                let ta_names = "";
-                usernames.forEach(function (key, value) {
-                    ta_names += "<@" + value.id + ">";
-                });
-                embed.setDescription(ta_names);
-                embed.setTitle("Are Clocked in and on duty! ");
-                message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
-            }
+    //If the message is !on-duty check to see who is on duty.
+    if (message.content.toLocaleLowerCase() === `${process.env.PREFIX}on-duty`) {
+        let embed = new Discord.MessageEmbed();
+        embed.setColor("#03e8fc");
+        //Delete the on-duty message
+        message.delete({ timeout: 1000 });
+        //If there is no one on duty message the channel that no one is online
+        if (usernames.size == 0) {
+            embed.setTitle("No one is on duty right now :/");
+            message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
         }
-    
-        if (message.content.toLowerCase() === `${process.env.PREFIX}help-student`) {
-            message.delete({ timeout: 1000 });
-            var descrption = "To check who is online, available, and on duty type the command: !on-duty \n";
-            let embed = new Discord.MessageEmbed();
-            embed.setTitle("Clock-Bot Mannual for Students");
-            embed.addField("On-Duty Command:", descrption);
-            embed.addField("TA-Schedule", "https://www.utrgv.edu/csci/academics/ta-center/index.htm");
-            embed.addField("Notes:", "You can also know who is on-duty by checking the bar on the right (they should have the role on-duty). \n The blue message indicates the on-duty messages! \n\n The benefit of using the on-duty command is that it pings all the TA's that are on-duty so they get a notification! \n\n You must start each command with a '!'. The commands are NOT case sensitve. You can type in any command with capitals and it will still accept the command. \n\n If you have any suggestions on making the bot better contact GentaKaieda#5381 on discord :-)");
-            embed.setColor("#94efff");
-            message.channel.send(embed).then(d_embed => { d_embed.delete({ timeout: 60000 }) });
+        //If one persion is on-duty message the channel that the one person is online 
+        else if (usernames.size == 1) {
+            usernames.forEach(function (key, value) {
+                embed.setDescription("<@" + value.id + ">");
+            });
+            embed.setTitle("Is online and on duty");
+            message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
         }
-        
+        //If there is mulitple TA's online then get all the TA's and display them
+        else {
+            let ta_names = "";
+            usernames.forEach(function (key, value) {
+                ta_names += "<@" + value.id + ">";
+            });
+            embed.setDescription(ta_names);
+            embed.setTitle("Are Clocked in and on duty! ");
+            message.channel.send(embed).then(d_msg => { d_msg.delete({ timeout: 60000 }) });
+        }
+        return;
+    }
+
+    if (message.content.toLowerCase() === `${process.env.PREFIX}help-student`) {
+        message.delete({ timeout: 1000 });
+        var descrption = "To check who is online, available, and on duty type the command: !on-duty \n";
+        let embed = new Discord.MessageEmbed();
+        embed.setTitle("Clock-Bot Mannual for Students");
+        embed.addField("On-Duty Command:", descrption);
+        embed.addField("TA-Schedule", "https://www.utrgv.edu/csci/academics/ta-center/index.htm");
+        embed.addField("Notes:", "You can also know who is on-duty by checking the bar on the right (they should have the role on-duty). \n The blue message indicates the on-duty messages! \n\n The benefit of using the on-duty command is that it pings all the TA's that are on-duty so they get a notification! \n\n You must start each command with a '!'. The commands are NOT case sensitve. You can type in any command with capitals and it will still accept the command. \n\n If you have any suggestions on making the bot better contact GentaKaieda#5381 on discord :-)");
+        embed.setColor("#94efff");
+        message.channel.send(embed).then(d_embed => { d_embed.delete({ timeout: 60000 }) });
+        return;
+    }
+
     //Check if the user has permission to do the command 
     if (message.member.hasPermission(['KICK_MEMBERS', 'BAN_MEMBERS'])) {
         //If the message is sent by the bot dont do anything just reutrn
@@ -79,7 +81,7 @@ client.on('message', message => {
             //Gets the message the user sent and get the time they are clocked in for
             let clock_message = message.content;
             //If the clock in message has more than 16 characters dont accept the string because of formatting
-            if(clock_message.length >= 16){
+            if (clock_message.length >= 16) {
                 message.delete({ timeout: 5000 });
                 embed.setTitle("Error!")
                 embed.setDescription("Clock-in command has too many characters. \nIf you need more assistance type the command: !help-ta");
@@ -128,19 +130,19 @@ client.on('message', message => {
                     message.delete({ timeout: 1000 });
                     embed.setAuthor(message.author.username, message.author.displayAvatarURL());
                     embed.setTitle("Clocked in");
-                    if(arr[0] === 0){
+                    if (arr[0] === 0) {
                         embed.setDescription("On duty for: " + arr[1] + "minutes");
                     }
-                    else if(arr[0] === 1 && arr[1] > 0){
+                    else if (arr[0] === 1 && arr[1] > 0) {
                         embed.setDescription("On duty for: " + arr[0] + "hour and " + arr[1] + "minutes");
                     }
-                    else if(arr[0] > 1 && arr[1] > 0){
+                    else if (arr[0] > 1 && arr[1] > 0) {
                         embed.setDescription("On duty for: " + arr[0] + "hours and " + arr[1] + "minutes");
                     }
-                    else if(arr[0] === 1 && arr[1] === 0){
+                    else if (arr[0] === 1 && arr[1] === 0) {
                         embed.setDescription("On duty for: " + arr[0] + "hour");
                     }
-                    else if(arr[0] > 1 && arr[0] === 0){
+                    else if (arr[0] > 1 && arr[0] === 0) {
                         embed.setDescription("On duty for: " + arr[0] + "hours");
                     }
                     embed.setTimestamp();
@@ -158,19 +160,19 @@ client.on('message', message => {
                 message.delete({ timeout: 1000 });
                 embed.setAuthor(message.author.username, message.author.displayAvatarURL());
                 embed.setTitle("Clocked in");
-                if(arr[0] === 0){
+                if (arr[0] === 0) {
                     embed.setDescription("On duty for: " + arr[1] + "minutes");
                 }
-                else if(arr[0] === 1 && arr[1] > 0){
+                else if (arr[0] === 1 && arr[1] > 0) {
                     embed.setDescription("On duty for: " + arr[0] + "hour and " + arr[1] + "minutes");
                 }
-                else if(arr[0] > 1 && arr[1] > 0){
+                else if (arr[0] > 1 && arr[1] > 0) {
                     embed.setDescription("On duty for: " + arr[0] + "hours and " + arr[1] + "minutes");
                 }
-                else if(arr[0] === 1 && arr[1] === 0){
+                else if (arr[0] === 1 && arr[1] === 0) {
                     embed.setDescription("On duty for: " + arr[0] + "hour");
                 }
-                else if(arr[0] > 1 && arr[0] === 0){
+                else if (arr[0] > 1 && arr[0] === 0) {
                     embed.setDescription("On duty for: " + arr[0] + "hours");
                 }
                 embed.setTimestamp();
@@ -282,99 +284,3 @@ function milisecondsConverter(arr1) {
     arr2.push(arr1[1] * 60000);
     return arr2;
 }
-
-
-/*
-Deleted code that might be useful.
-
-    //Allows the bot to send messages to different channels.
-    let announcment_channel = client.channels.cache.get('697626294875193434');
-    if(announcment_channel){
-        announcment_channel.send(user.username + " clocked-in @ " + time);
-    }
-
-
-    //If the message is sent by the bot dont do anything just reutrn
-    if (message.author.bot) return;
-    //Create a bool value that checks if the user already exists in the map
-    let exist = false;
-    //Create a time variable
-    let time = getTimeString();
-    //Create a user variable
-    let user = message.author;
-    //Gets the message and omitts case seneitivity / checks if the message says clock-in or not
-    if (message.content.toLocaleLowerCase() === `${prefix}clock-in`) {
-        //If there is one or more users clocked-in than check if the user is alreay clocked-in
-        if (usernames.size >= 1) {
-            usernames.forEach(function (key, value) {
-                if (value.id === message.author.id) {
-                    message.delete({ timeout: 5000 });
-                    message.reply(" is already clocked in. Did you mean clock out?").then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-                    //message.channel.send("The User is already clocked in. Did you mean clock out?");
-                    //If the user already exists change the value to true
-                    exist = true;
-                }
-            });
-            //If the user already existed return and do nothing. If the user did not exist create the new user.
-            if (exist) {
-                return;
-            }
-            else {
-                usernames.set(user, time);
-                message.delete({ timeout: 5000 });
-                message.channel.send(user.username + " clocked-in @ " + time).then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-            }
-
-        }
-        //If the user is the first person clocking-in
-        else {
-            usernames.set(user, time);
-            message.delete({ timeout: 5000 });
-            message.channel.send(user.username + " clocked-in @ " + time).then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-        }
-        //Check that the map is correctly being inputted
-        console.log(usernames);
-    }
-    //If the message is clock-out then pop the user out of the array.
-    if (message.content.toLocaleLowerCase() === `${prefix}clock-out`) {
-        //Create a bool variable that checks if the user is checked-in
-        let exist = false;
-        //Check if they exist in the map.
-        if (usernames.size >= 0) {
-            usernames.forEach(function (key, value) {
-                if (value.id === message.author.id) {
-                    let user = message.author;
-                    let newtime = getTimeString();
-                    message.delete({ timeout: 5000 });
-                    message.channel.send(user.username + " clocked out @ " + newtime).then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-                    usernames.delete(user);
-                    exist = true;
-                }
-            });
-            //If the user existed return and do nothing. If the user did not exist create ask the user if they clocked in.
-            if (exist) {
-                return;
-            }
-            else {
-                message.delete({ timeout: 5000 });
-                message.channel.send("Are you sure you clocked in? You don't seem to come up in TA's that are clocked in.").then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-            }
-
-        }
-        console.log(usernames);
-    }
-
-
-      if (usernames.size == 0) {
-            message.delete({ timeout: 5000 });
-            message.channel.send("No one is on duty right now :/").then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-        }
-        else if (usernames.size == 1) {
-            message.delete({ timeout: 5000 });
-            message.channel.send("Is online and on duty").then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-        }
-        else {
-            message.delete({ timeout: 5000 });
-            message.channel.send("Are Clocked in and on duty!").then(d_msg => { d_msg.delete({ timeout: 5000 }) });
-        }
-*/
